@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>VNF NOTEPAD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Theme Toggle -->
+    <div class="theme-box">
+      <button id="themeToggle">Dark Mode</button>
+    </div>
+
+    <!-- Language Switcher -->
+    <div class="lang-box">
+      <select id="langSwitcher">
+        <option value="en">English</option>
+        <option value="gr">Ελληνικά</option>
+      </select>
+    </div>
+
+    <h1 id="titleHeader">VNF NOTEPAD</h1>
+
+    <label id="titleLabel">Title</label>
+    <input id="title" placeholder="Title">
+
+    <label id="contentLabel">Content</label>
+    <textarea id="content" placeholder="Content"></textarea>
+
+    <button id="saveBtn" onclick="addNote()">Save</button>
+
+    <h2 id="notesHeader">Your Notes</h2>
+    <div id="list"></div>
+
+    <footer>
+      © 2026 VNF Software — Created by Vasilis Fanes Nikitaras.<br>
+      Unauthorized copying or resale is strictly prohibited.<br>
+      Contact: vasilis.nikitaras@gmail.com
+    </footer>
+
+  </div>
+
+  <script>
+    // ---------------- LANGUAGE SYSTEM ----------------
+    const translations = {
+      en: {
+        title: "Title",
+        content: "Content",
+        save: "Save",
+        yourNotes: "Your Notes",
+        edit: "Edit",
+        delete: "Delete"
+      },
+      gr: {
+        title: "Τίτλος",
+        content: "Περιεχόμενο",
+        save: "Αποθήκευση",
+        yourNotes: "Οι Σημειώσεις σου",
+        edit: "Επεξεργασία",
+        delete: "Διαγραφή"
+      }
+    };
+
+    function applyLanguage(lang) {
+      document.getElementById("titleLabel").innerText = translations[lang].title;
+      document.getElementById("contentLabel").innerText = translations[lang].content;
+      document.getElementById("saveBtn").innerText = translations[lang].save;
+      document.getElementById("notesHeader").innerText = translations[lang].yourNotes;
+
+      document.querySelectorAll(".editLink").forEach(el => el.innerText = translations[lang].edit);
+      document.querySelectorAll(".deleteLink").forEach(el => el.innerText = translations[lang].delete);
+    }
+
+    document.getElementById("langSwitcher").addEventListener("change", (e) => {
+      applyLanguage(e.target.value);
+    });
+
+    applyLanguage("en");
+
+    // ---------------- DARK MODE ----------------
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      document.getElementById("themeToggle").innerText = isDark ? "Light Mode" : "Dark Mode";
+    });
+
+    // ---------------- NOTES SYSTEM ----------------
+    async function loadNotes() {
+      const res = await fetch('/api/notes');
+      const notes = await res.json();
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+
+      notes.forEach(n => {
+        const div = document.createElement('div');
+        div.className = 'note';
+        div.innerHTML = `
+          <strong>${n.title}</strong><br>
+          ${n.content}
+          <div class="actions">
+            <span class="action-btn editLink" onclick="editNote(${n.id})">Edit</span>
+            <span class="action-btn deleteLink" onclick="deleteNote(${n.id})">Delete</span>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+
+      applyLanguage(document.getElementById("langSwitcher").value);
+    }
+
+    async function addNote() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+
+      await fetch('/api/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content })
+      });
+
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
+
+      loadNotes();
+    }
+
+    async function editNote(id) {
+      const newTitle = prompt("New title:");
+      const newContent = prompt("New content:");
+
+      if (!newTitle || !newContent) return;
+
+      await deleteNote(id);
+
+      await fetch('/api/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newTitle, content: newContent })
+      });
+
+      loadNotes();
+    }
+
+    async function deleteNote(id) {
+      const ok = confirm("Are you sure you want to delete this note?");
+      if (!ok) return;
+
+      await fetch('/api/notes/' + id, { method: 'DELETE' });
+      loadNotes();
+    }
+
+    loadNotes();
+  </script>
+
+</body>
+</html>

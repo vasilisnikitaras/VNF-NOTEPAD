@@ -1,0 +1,174 @@
+/* ===== BASE ===== */
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ===== MAIN WRAPPER ===== */
+.container {
+  max-width: 480px; /* ΜΑΖΕΜΕΝΟ */
+  margin: auto;
+  padding: 20px;
+}
+
+/* ===== LANGUAGE DROPDOWN ===== */
+.lang-box {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+/* ===== HEADERS ===== */
+h1 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+h2 {
+  margin-top: 25px;
+  font-size: 20px;
+  text-align: center;
+}
+
+/* ===== INPUTS ===== */
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background: white;
+  box-sizing: border-box;
+}
+
+/* ===== BUTTON ===== */
+button {
+  width: 100%;
+  padding: 12px;
+  background: #0078ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+/* ===== NOTE CARD ===== */
+.note {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+}
+
+/* ===== ACTIONS ===== */
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 20px;
+}
+
+.action-btn {
+  color: #0078ff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  margin-top: 20px;
+  padding: 15px 0;
+  border-top: 1px solid #ccc;
+  line-height: 1.4;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+
+  input, textarea {
+    font-size: 15px;
+  }
+
+  button {
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  footer {
+    font-size: 12px;
+  }
+}
+
+
+/* ===== DARK MODE ===== */
+body.dark {
+  background: #0d0d0d;
+  color: #f2f2f2;
+}
+
+body.dark h1,
+body.dark h2 {
+  color: #ffffff;
+}
+
+body.dark input,
+body.dark textarea {
+  background: #1a1a1a;
+  color: #f2f2f2;
+  border: 1px solid #333;
+}
+
+body.dark button {
+  background: #1e90ff;
+  color: white;
+}
+
+body.dark .note {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #f2f2f2;
+  box-shadow: 0 0 8px rgba(255,255,255,0.05);
+}
+
+body.dark .action-btn {
+  color: #4da3ff;
+}
+
+body.dark footer {
+  color: #ccc;
+  border-top: 1px solid #333;
+}
+
+/* ===== THEME BUTTON ===== */
+.theme-box {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+#themeToggle {
+  padding: 6px 12px;
+  background: #0078ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+body.dark #themeToggle {
+  background: #4da3ff;
+}
