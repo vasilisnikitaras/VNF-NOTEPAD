@@ -34,6 +34,9 @@
 
     <button id="saveBtn" onclick="addNote()">Save</button>
 
+    <!-- ⭐ REFRESH BUTTON -->
+    <button onclick="refreshNotes()">Refresh</button>
+
     <h2 id="notesHeader">Your Notes</h2>
     <div id="list"></div>
 
@@ -129,16 +132,18 @@
       loadNotes();
     }
 
+    // ⭐ FIXED EDIT — ΔΕΝ ΣΒΗΝΕΙ ΤΙΠΟΤΑ
     async function editNote(id) {
-      const newTitle = prompt("New title:");
-      const newContent = prompt("New content:");
+      const res = await fetch('/api/notes/' + id);
+      const oldNote = await res.json();
+
+      const newTitle = prompt("New title:", oldNote.title);
+      const newContent = prompt("New content:", oldNote.content);
 
       if (!newTitle || !newContent) return;
 
-      await deleteNote(id);
-
-      await fetch('/api/notes', {
-        method: 'POST',
+      await fetch('/api/notes/' + id, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: newTitle, content: newContent })
       });
@@ -151,6 +156,11 @@
       if (!ok) return;
 
       await fetch('/api/notes/' + id, { method: 'DELETE' });
+      loadNotes();
+    }
+
+    // ⭐ REFRESH FUNCTION
+    function refreshNotes() {
       loadNotes();
     }
 
