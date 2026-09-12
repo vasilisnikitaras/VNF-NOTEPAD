@@ -41,6 +41,33 @@ app.delete('/api/notes/:id', async (req, res) => {
   res.json({ ok: true });
 });
 
+
+// ⭐⭐⭐ FIX EDIT ⭐⭐⭐
+
+// GET note by ID
+app.get('/api/notes/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  const result = await pool.query(
+    'SELECT id, title, content FROM notes WHERE id = $1',
+    [id]
+  );
+  res.json(result.rows[0]);
+});
+
+// UPDATE note
+app.put('/api/notes/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  const { title, content } = req.body;
+
+  const result = await pool.query(
+    'UPDATE notes SET title = $1, content = $2 WHERE id = $3 RETURNING id, title, content',
+    [title, content, id]
+  );
+
+  res.json(result.rows[0]);
+});
+
+
 const PORT = 5005;
 app.listen(PORT, () => {
   console.log(`VNF NOTEPAD running on http://localhost:${PORT}`);
